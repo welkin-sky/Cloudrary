@@ -1,0 +1,144 @@
+#ifndef CLOUDRARY_BASE_H
+#define CLOUDRARY_BASE_H
+
+#include <initializer_list>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+#include "nlohmann/json.hpp"
+
+typedef int64_t INT;
+
+using std::string;
+using std::vector;
+using nlohmann::json;
+
+
+class Bookmark {
+
+};
+
+class BookmarkGroup {
+
+};
+
+
+
+class Book {
+
+public:
+
+    Book() = default;
+    Book(const string & j);
+    Book(const Book & b) = default; //复制构造
+    Book(Book && b) noexcept = default; //移动构造
+    ~Book() = default;
+
+    Book & operator= (const Book & b) = default;
+    Book & operator= (Book && b) = default;
+
+
+    [[nodiscard]] string getName() const {return _name;}
+    [[nodiscard]] string getTitle() const {return _title;} // 标题和名字区分
+    [[nodiscard]] string getTextURI() const {return _textURI;}
+    [[nodiscard]] string getCoverURI() const {return _coverURI;} // 封面
+    [[nodiscard]] string getAuthor() const {return _author;}
+    [[nodiscard]] string getDescription() const {return _description;}
+
+
+    void setName(string name) {name = _name;}
+    void setTitle(string title) {title = _title;} // 标题和名字区分
+    void setTextURI(string textURI) {textURI = _textURI;}
+    void setCoverURI(string coverURI) {coverURI = _coverURI;}// 封面
+    void setAuthor(string author) {author = _author;}
+    void setDescription(string description) {description = _description;}
+
+    BookmarkGroup & bookmarks();
+    static string serialize(Book & b);
+    static Book & deserialize(string j);
+
+private:
+
+    string _name;
+    string _title;
+    string _textURI;
+    string _coverURI;
+    string _author;
+    string _description;
+    BookmarkGroup _bookmarks;
+
+};
+
+bool operator== (const Book & a, const Book & b) { return a.getTextURI() == b.getTextURI(); }
+//暂时认为路径相同即相同
+bool operator!= (const Book & a, const Book & b) { return !(a == b); }
+bool operator< (const Book & a, const Book & b) { return a.getName() < b.getName(); }
+bool operator> (const Book & a, const Book & b) { return b < a; }
+
+class BookList { //无名的书单，用于临时对象（如筛选结果）
+
+public:
+
+    BookList() = default;
+    BookList(std::initializer_list<Book> args) : _books(args) {}; //可变参数
+    BookList(Book * arr, INT len) : _books(arr, arr + len) {};
+    BookList(const string & j);
+    BookList(const BookList & lib) = default; //复制构造
+    BookList(BookList && lib) = default; //移动构造
+    ~BookList() = default;
+
+    Book & operator[] (INT index) {return this->at(index); }
+
+    [[nodiscard]] INT size() const { return _books.size(); }
+    void add(Book & book) { _books.push_back(book); }
+    void remove(Book & book) { _books.erase( _books.begin() + find(book)); }
+    Book & at(INT index) {return _books[index];}
+    INT & find(string name); // 以名字做主键
+    INT & find(Book book);
+    Book & search(string info); // 模糊查找
+    static string serialize(BookList & b);
+    static BookList deserialize(string j);
+
+private:
+    vector<Book> _books;
+};
+
+bool operator== (BookList & a, BookList & b) { // 顺序相同
+    if ( a.size() != b.size() ) return false;
+    for ( int i = 0; i < a.size(); i++ ) {
+        if ( a.at(i) != b.at(i) )
+            return false;
+    }
+    return true;
+}
+
+class Library : BookList { // tbc
+
+public:
+
+    string getName() { return _name };
+
+    void setname(const string & name) { _name = name};
+
+    string serialize();
+    void deserialize(string j);
+
+private:
+    string _name;
+
+};
+
+
+class Base {
+    Base();
+    Base(const string & j);
+    void add(Library lib); //我觉得这块应该不用引用
+    void remove(int index);
+    void remove(Library & lib);
+
+    static string serialize(Base b);
+    static Base & deserialize(string j);
+};
+
+#endif
