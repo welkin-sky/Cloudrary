@@ -11,6 +11,7 @@
 typedef int64_t INT;
 
 using nlohmann::json;
+using std::iterator_traits;
 using std::string;
 using std::vector;
 
@@ -31,15 +32,15 @@ class Book {
 
   [[nodiscard]] string getName() const { return _name; }
   [[nodiscard]] string getTitle() const { return _title; }  // 标题和名字区分
-  [[nodiscard]] string getTextURI() const { return _textURI; }
-  [[nodiscard]] string getCoverURI() const { return _coverURI; }  // 封面
+  [[nodiscard]] string getTextPath() const { return _textPath; }
+  [[nodiscard]] string getCoverPath() const { return _coverPath; }  // 封面
   [[nodiscard]] string getAuthor() const { return _author; }
   [[nodiscard]] string getDescription() const { return _description; }
 
   void setName(string name) { name = _name; }
   void setTitle(string title) { title = _title; }  // 标题和名字区分
-  void setTextURI(string textURI) { textURI = _textURI; }
-  void setCoverURI(string coverURI) { coverURI = _coverURI; }  // 封面
+  void setTextPath(string textPath) { textPath = _textPath; }
+  void setCoverPath(string coverPath) { coverPath = _coverPath; }  // 封面
   void setAuthor(string author) { author = _author; }
   void setDescription(string description) { description = _description; }
 
@@ -51,15 +52,15 @@ class Book {
  private:
   string _name;
   string _title;
-  string _textURI;
-  string _coverURI;
+  string _textPath;
+  string _coverPath;
   string _author;
   string _description;
   BookmarkGroup _bookmarks;
 };
 
 bool operator==(const Book &a, const Book &b) {
-  return a.getTextURI() == b.getTextURI();
+  return a.getTextPath() == b.getTextPath();
 }
 
 // 暂时认为路径相同即相同
@@ -88,7 +89,12 @@ class BookList {  // 无名的书单，用于临时对象（如筛选结果）
   BookList &operator=(const BookList &bl) = default;
   BookList &operator=(BookList &&bl) = default;
 
-  [[nodiscard]] INT size() const { return _books.size(); }
+  typedef vector<Book>::iterator iterator;
+
+  iterator begin() { return _books.begin(); }
+  iterator end() { return _books.end(); }
+
+  [[nodiscard]] INT size() const { return static_cast<INT>(_books.size()); }
 
   void add(Book &book) { _books.push_back(book); }
   void remove(Book &book) { _books.erase(_books.begin() + find(book)); }
@@ -100,8 +106,9 @@ class BookList {  // 无名的书单，用于临时对象（如筛选结果）
 
   Book &search(string info);  // 模糊查找
 
-  static string serialize(BookList &b);
-  static BookList deserialize(string j);
+  //    Deprecated
+  //    static string serialize(BookList &b);
+  //    static BookList deserialize(string j);
 
  private:
   vector<Book> _books;
@@ -133,18 +140,23 @@ class Base {
   Base() = default;
   Base(const string &j);
 
-  void add(Library &lib) { libs.push_back(lib); }  // 我错了 是引用
-  void remove(int index) { libs.erase(libs.begin() + index); }
+  typedef vector<Library>::iterator iterator;
+
+  iterator begin() { return _libs.begin(); }
+  iterator end() { return _libs.end(); }
+
+  void add(Library &lib) { _libs.push_back(lib); }  // 我错了 是引用
+  void remove(int index) { _libs.erase(_libs.begin() + index); }
 
   void swap(INT a, INT b) {
-    std::swap(libs[a], libs[b]);
+    std::swap(_libs[a], _libs[b]);
   }  // 交换两个Library的位置
 
   static string serialize(Base b);
   static Base &deserialize(string j);
 
  private:
-  vector<Library> libs;
+  vector<Library> _libs;
 };
 
 #endif
