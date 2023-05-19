@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../include/base.h"
+#include "base.h"
 
 void to_json(json& j, const Book& b) {
   j = json{
@@ -29,6 +30,34 @@ Book::Book(const string& j) : Book() {
   *this = std::move(tempBook);  // 不知道对不对
 }
 
-string Book::serialize(Book& b) {}
+void to_json(json& j, const BookList& b) {
+  for (const auto& item : b._books) {
+    j.push_back(item);
+  }
+}
 
-Book& Book::deserialize(string j) {}
+void from_json(const json& j, BookList& b) {
+  for (const auto& item : j) {
+    Book temp;
+    temp = item;
+    b.add(temp);
+  }
+}
+
+void to_json(json& j, const Library& l) {
+  json name = {"name", l._name};
+  j = l;
+  j.push_back(name);
+}
+
+void from_json(const json& j, Library& l) {
+  for (const auto& item : j) {
+    if (item.contains("name"))
+      l._name = item.at("name").get<string>();
+    else {
+      Book temp;
+      temp = item;
+      l.add(temp);
+    }
+  }
+}

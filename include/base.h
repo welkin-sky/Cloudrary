@@ -46,8 +46,8 @@ class Book {
 
   BookmarkGroup &bookmarks();
 
-  static string serialize(Book &b);
-  static Book &deserialize(string j);
+  friend void from_json(const json &j, Book &b);//大半夜尝试半天，这函数不能用static，得friend
+  friend void to_json(json &j, const Book &b);
 
  private:
   string _name;
@@ -109,15 +109,17 @@ class BookList {  // 无名的书单，用于临时对象（如筛选结果）
   //    Deprecated
   //    static string serialize(BookList &b);
   //    static BookList deserialize(string j);
-
+  friend void to_json(json& j, const BookList& b);
+  friend void from_json(const json& j, BookList& b);
  private:
   vector<Book> _books;
 };
 
 bool operator==(BookList &a, BookList &b) {  // 顺序相同
   if (a.size() != b.size()) return false;
+
   for (int i = 0; i < a.size(); i++) {
-    if (a.at(i) != b.at(i)) return false;
+    if ((a.at(i)) != (b.at(i))) return false;
   }
   return true;
 }
@@ -128,8 +130,8 @@ class Library : BookList {  // tbc
   string getName() { return _name; };
   void setName(const string &name) { _name = name; };
 
-  string serialize();
-  void deserialize(string j);
+  friend void from_json(const json& j, Library& l);
+  friend void to_json(json& j, const Library& l);
 
  private:
   string _name;
@@ -157,6 +159,19 @@ class Base {
 
  private:
   vector<Library> _libs;
+};
+
+class Process {
+ public:
+  void addBook();
+  void deleteBook();
+  void searchBook();
+  void downloadBook();
+  void deepDeleteBook();
+  void sortBook();
+  void editBook();
+  void showBook();
+
 };
 
 #endif
