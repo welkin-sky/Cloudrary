@@ -1,9 +1,3 @@
-//
-// Created by Welkinsky on 5/18.
-//
-
-#include <string>
-
 #include "../include/base.h"
 
 void to_json(json& j, const Book& b) {
@@ -29,6 +23,12 @@ Book::Book(const string& j) : Book() {
   *this = std::move(tempBook);  // 不知道对不对
 }
 
-string Book::serialize(Book& b) {}
+string Book::serialize(const Book& b) {
+  json j = b;
+  return j.dump();
+}
 
-Book& Book::deserialize(string j) {}
+Book Book::deserialize(const string& j) {
+  auto tempJson = json::parse(j);
+  return tempJson.get<Book>();
+}

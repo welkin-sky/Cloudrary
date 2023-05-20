@@ -22,7 +22,7 @@ class BookmarkGroup {};
 class Book {
  public:
   Book() = default;
-  Book(const string &j);
+  explicit Book(const string &j);
   Book(const Book &b) = default;      // 复制构造
   Book(Book &&b) noexcept = default;  // 移动构造
   ~Book() = default;
@@ -46,8 +46,8 @@ class Book {
 
   BookmarkGroup &bookmarks();
 
-  static string serialize(Book &b);
-  static Book &deserialize(string j);
+  static string serialize(const Book &b);
+  static Book deserialize(const string &j);
 
  private:
   string _name;
@@ -80,7 +80,6 @@ class BookList {  // 无名的书单，用于临时对象（如筛选结果）
   BookList(std::initializer_list<Book> args) : _books(args){};  // 可变参数
   BookList(Book *arr, INT len) : _books(arr, arr + len){};
   BookList(const string &j);
-
   BookList(const BookList &lib) = default;  // 复制构造
   BookList(BookList &&lib) = default;       // 移动构造
   ~BookList() = default;
@@ -98,6 +97,8 @@ class BookList {  // 无名的书单，用于临时对象（如筛选结果）
 
   void add(Book &book) { _books.push_back(book); }
   void remove(Book &book) { _books.erase(_books.begin() + find(book)); }
+  vector<Book> &data() { return _books; }
+  [[nodiscard]] vector<Book> data() const { return _books; }
 
   Book &at(INT index) { return _books[index]; }
 
@@ -106,9 +107,8 @@ class BookList {  // 无名的书单，用于临时对象（如筛选结果）
 
   Book &search(string info);  // 模糊查找
 
-  //    Deprecated
-  //    static string serialize(BookList &b);
-  //    static BookList deserialize(string j);
+  static string serialize(BookList &b);
+  static BookList deserialize(string j);
 
  private:
   vector<Book> _books;
