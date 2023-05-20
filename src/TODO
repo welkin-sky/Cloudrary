@@ -1,0 +1,7 @@
+Welkinsky :
+对Library名字的处理
+setName和构造函数应对Name进行重名检查
+find和subList的实现
+写一个测试用例
+书签的实现方法 （现在的想法是记录页面中心对应的字符位置 有点难说实话
+cpp是真的烦
