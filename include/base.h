@@ -2,6 +2,7 @@
 #define CLOUDRARY_BASE_H
 
 #include <algorithm>
+#include <functional>
 #include <initializer_list>
 #include <string>
 #include <vector>
@@ -13,6 +14,29 @@ typedef int64_t INT;
 using nlohmann::json;
 using std::string;
 using std::vector;
+using std::function;
+
+class Book;
+class BookList;
+class Library;
+class Base;
+
+// Operator overloads
+
+bool operator==(const Book &a, const Book &b);
+bool operator!=(const Book &a, const Book &b);
+bool operator<(const Book &a, const Book &b);
+bool operator>(const Book &a, const Book &b);
+bool operator==(BookList &a, BookList &b);
+bool operator==(Library &a, Library &b);
+
+void to_json(json &j, const Book &b);
+void from_json(const json &j, Book &b);
+void to_json(json &j, const BookList &b);
+void from_json(const json &j, BookList &b);
+void to_json(json &j, const Library &l);
+void from_json(const json &j, Library &l);
+
 
 class Bookmark {};
 
@@ -24,6 +48,10 @@ class Book {
 
   Book() = default;
   explicit Book(const string &j);
+  Book(string name, string title, string textPath, string coverPath,
+       string author, string description)
+       : _name(std::move(name)), _title(std::move(title)), _textPath(std::move(textPath)),
+         _coverPath(std::move(coverPath)), _author(std::move(author)), _description(std::move(description)) {}
   Book(const Book &b) = default;      // 复制构造
   Book(Book &&b) noexcept = default;  // 移动构造
   ~Book() = default;
@@ -43,41 +71,49 @@ class Book {
 
   // Setters
 
-  void setName(string name) { _name = std::move(name); }
-  void setTitle(string title) { _title = std::move(title); }  // 标题和名字区分
-  void setTextPath(string textPath) { _textPath = std::move(textPath); }
-  void setCoverPath(string coverPath) {
-    _coverPath = std::move(coverPath);
-  }  // 封面
-  void setAuthor(string author) { _author = std::move(author); }
-  void setDescription(string description) {
-    _description = std::move(description);
-  }
+  Book & setName(string name) { _name = std::move(name); return *this; }
+  Book & setTitle(string title) { _title = std::move(title); return *this; }  // 标题和名字区分
+  Book & setTextPath(string textPath) { _textPath = std::move(textPath); return *this; }
+  Book & setCoverPath(string coverPath) {_coverPath = std::move(coverPath); return *this; }  // 封面
+  Book & setAuthor(string author) { _author = std::move(author); return *this; }
+  Book & setDescription(string description) {_description = std::move(description); return *this;}
 
-  BookmarkGroup &bookmarks();
+  // Predicates
+  typedef const function<bool(const Book &, const Book &)> predicate;
+  static predicate CompareName;
+  static predicate CompareTitle;
+  static predicate CompareTextPath;
+  static predicate CompareCoverPath;
+  static predicate CompareAuthor;
+  static predicate CompareDescription;
+
+    BookmarkGroup &bookmarks();
 
   // To JSON format string
   static string serialize(const Book &b);
   static Book deserialize(const string &j);
 
  private:
-  string _name;
-  string _title;
-  string _textPath;
-  string _coverPath;
-  string _author;
-  string _description;
+  string _name = "null";
+  string _title = "null";
+  string _textPath = "null";
+  string _coverPath = "null";
+  string _author = "null";
+  string _description = "null";
   BookmarkGroup _bookmarks;
 };
+
+
 
 class BookList {  // 无名的书单，用于临时对象（如筛选结果）
 
  public:
   BookList() = default;
 
-  BookList(std::initializer_list<Book> args) : _books(args){};  // 可变参数
-  BookList(Book *arr, INT len) : _books(arr, arr + len){};
-  BookList(const string &j);
+  BookList(std::initializer_list<Book> args) : _books(args){}  // 可变参数
+  BookList(Book *arr, INT len) : _books(arr, arr + len){}
+  BookList(vector<Book> v) : _books(std::move(v)) {}
+  explicit BookList(const string &j);
   BookList(const BookList &lib) = default;  // 复制构造
   BookList(BookList &&lib) = default;       // 移动构造
   ~BookList() = default;
@@ -103,26 +139,31 @@ class BookList {  // 无名的书单，用于临时对象（如筛选结果）
 
   [[nodiscard]] const_iterator cbegin() const { return _books.cbegin(); }
   [[nodiscard]] const_iterator cend() const { return _books.cend(); }
-  [[nodiscard]] const_reverse_iterator crbegin() const {
-    return _books.crbegin();
-  }
+  [[nodiscard]] const_reverse_iterator crbegin() const {return _books.crbegin(); }
   [[nodiscard]] const_reverse_iterator crend() const { return _books.crend(); }
 
   [[nodiscard]] INT size() const { return static_cast<INT>(_books.size()); }
 
-  void add(Book &book) { _books.push_back(book); }
-  void remove(Book &book) { _books.erase(_books.begin() + find(book)); }
+  BookList & add(Book &book) { _books.push_back(book); return *this;}
+  BookList & remove(Book &book) { _books.erase(_books.begin() + find(book)); return *this; }
+  BookList & reverse() { std::reverse(begin(), end()); return *this; }
   vector<Book> &data() { return _books; }
   [[nodiscard]] vector<Book> data() const { return _books; }
 
-  Book &at(INT index) { return _books[index]; }
+  Book &at(INT index) { return _books.at(index); }
 
-  INT find(string name);  // 以名字做主键
-  INT find(Book book);
+  [[nodiscard]] INT find(const Book & book) const { return std::distance(begin(),
+                                                           std::find(cbegin(), cend(), book));}
 
-  Book &search(string info);  // 模糊查找
+  BookList & sortBy(const function<bool(const Book &, const Book &)> & comp = Book::CompareName) {
+    std::sort(begin(), end(), comp);
+    return *this;
+  }
 
-  BookList subList(INT first, INT last);
+  BookList &search(string info);  // 模糊查找
+
+  BookList sublist(INT first, INT last) { return {
+          vector<Book>(_books.begin() + first, _books.begin() + last)}; }
 
   static string serialize(const BookList &b);
   static BookList deserialize(const string &j);
@@ -197,20 +238,6 @@ class Process {
   void showBook();
 };
 
-// Declarations
 
-bool operator==(const Book &a, const Book &b);
-bool operator!=(const Book &a, const Book &b);
-bool operator<(const Book &a, const Book &b);
-bool operator>(const Book &a, const Book &b);
-bool operator==(BookList &a, BookList &b);
-bool operator==(Library &a, Library &b);
-
-void to_json(json &j, const Book &b);
-void from_json(const json &j, Book &b);
-void to_json(json &j, const BookList &b);
-void from_json(const json &j, BookList &b);
-void to_json(json &j, const Library &l);
-void from_json(const json &j, Library &l);
 
 #endif

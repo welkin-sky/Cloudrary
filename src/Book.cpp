@@ -23,7 +23,7 @@ void to_json(json &j, const Book &b) {
   j = json{
       {"name", b.getName()},         {"title", b.getTitle()},
       {"textPath", b.getTextPath()}, {"coverPath", b.getCoverPath()},
-      {"author", b.getAuthor()},     {"Description", b.getDescription()},
+      {"author", b.getAuthor()},     {"description", b.getDescription()},
   };
 }
 
@@ -49,3 +49,17 @@ bool operator<(const Book &a, const Book &b) {
 }
 
 bool operator>(const Book &a, const Book &b) { return b < a; }
+
+// Defination of predicates
+Book::predicate Book::CompareName =
+        [](const Book & a, const Book & b) -> bool {return a.getName() < b.getName(); };
+Book::predicate Book::CompareTitle =
+        [](const Book & a, const Book & b) -> bool {return a.getTitle() < b.getTitle(); };
+Book::predicate Book::CompareTextPath =
+        [](const Book & a, const Book & b) -> bool {return a.getTextPath() < b.getTextPath(); };
+Book::predicate Book::CompareCoverPath =
+        [](const Book & a, const Book & b) -> bool {return a.getCoverPath() < b.getCoverPath(); };
+Book::predicate Book::CompareAuthor =
+        [](const Book & a, const Book & b) -> bool {return a.getName() < b.getAuthor(); };
+Book::predicate Book::CompareDescription =
+        [](const Book & a, const Book & b) -> bool {return a.getDescription() < b.getDescription(); };
