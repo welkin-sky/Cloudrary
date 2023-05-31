@@ -7,7 +7,7 @@ import FluentUI
 import "qrc:///QML/global/"
 
 FluWindow {                         //主页面
-    title: "Cloudary"
+    title: "Cloudrary"
     width: 1000
     height: 640
     closeDestory:false
@@ -22,8 +22,8 @@ FluWindow {                         //主页面
             footerItems:ItemsFooter
             z:11
             displayMode:MainEvent.displayMode
-            logo: "qrc:/resource/image/cloudary_icon.svg"
-            title:"Cloudary"
+            logo: "qrc:/resource/image/cloudrary_icon.png"
+            title:"Cloudrary"
             autoSuggestBox:FluAutoSuggestBox{
                 width: 280
                 anchors.centerIn: parent

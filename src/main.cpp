@@ -6,7 +6,7 @@
 #include <QProcess>
 #include "AppInfo.h"
 
-    int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     //将样式设置为Basic，不然会导致组件显示异常
     qputenv("QT_QUICK_CONTROLS_STYLE","Basic");

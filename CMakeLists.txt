@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Cloudary VERSION 0.1 LANGUAGES CXX)
+project(Cloudrary VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Core)
 
 qt_standard_project_setup()
+
+set(CMAKE_AUTORCC ON)
 
 
 
@@ -36,26 +38,26 @@ endforeach(filepath)
 
 #添加可执行文件
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    qt_add_executable(appCloudary
+    qt_add_executable(appCloudrary
         ${sources_files}
-        #example.rc
+        Cloudrary.qrc
     )
 else ()
-    qt_add_executable(appCloudary
+    qt_add_executable(appCloudrary
         ${sources_files}
     )
 endif ()
 
-qt_add_qml_module(appCloudary
-    URI Cloudary
+qt_add_qml_module(appCloudrary
+    URI Cloudrary
     VERSION 1.0
     QML_FILES ${qml_files}
     RESOURCES ${resource_files}
 )
 
-target_include_directories(appCloudary PUBLIC ./src/include ./src)
+target_include_directories(appCloudrary PUBLIC ./src/include ./src)
 
-set_target_properties(appCloudary PROPERTIES
+set_target_properties(appCloudrary PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -63,11 +65,11 @@ set_target_properties(appCloudary PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(appCloudary
+target_link_libraries(appCloudrary
     PRIVATE Qt6::Quick Qt6::Core
 )
 
-install(TARGETS appCloudary
+install(TARGETS appCloudrary
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import FluentUI
 
-FluWindow {
+Window {
     id:app
     Component.onCompleted: {
         FluApp.init(app)

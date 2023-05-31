@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/">
+    <file>resource/image/cloudrary_icon.png</file>
+    <file>QML/Main.qml</file>
+    <file>QML/App.qml</file>
+  </qresource>
+</RCC>
