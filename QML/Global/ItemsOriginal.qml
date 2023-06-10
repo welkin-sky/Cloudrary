@@ -49,15 +49,16 @@ FluObject{
         //        navigationView.push("qrc:/QML/page/Bookmark.qml")
         //    }
         //}
-        FluPaneItem{
-            title:"我的图书计划"
-            image:"qrc:/resource/image/control/Checkbox.png"
-            getEntrance:true
-            desc:"A control that a user can select or clear."
-            onTap:{
-                navigationView.push("qrc:/QML/page/Plan.qml")
-            }
-        }     
+        
+        //FluPaneItem{
+        //    title:"我的图书计划"
+        //    image:"qrc:/resource/image/control/Checkbox.png"
+        //    getEntrance:true
+        //    desc:"A control that a user can select or clear."
+        //    onTap:{
+        //        navigationView.push("qrc:/QML/page/Plan.qml")
+        //    }
+        //}     
     }
 
 //在首页显示窗口的快速入口
