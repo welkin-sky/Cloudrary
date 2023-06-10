@@ -4,7 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.platform
 import FluentUI
-import "qrc:///QML/global/"
+import "../global"
 
 CustomWindow {
 

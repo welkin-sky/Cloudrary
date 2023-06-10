@@ -40,15 +40,15 @@ FluObject{
                 navigationView.push("qrc:/QML/page/Collection.qml")
             }
         }
-        FluPaneItem{
-            title:"我的书签"
-            image:"qrc:/resource/image/control/Slider.png"
-            getEntrance:true
-            desc:"A control that lets the user select from a rangeof values by moving a Thumb control along atrack."
-            onTap:{
-                navigationView.push("qrc:/QML/page/Bookmark.qml")
-            }
-        }
+        //FluPaneItem{
+        //    title:"我的书签"
+        //   image:"qrc:/resource/image/control/Slider.png"
+        //    getEntrance:true
+        //    desc:"A control that lets the user select from a rangeof values by moving a Thumb control along atrack."
+        //    onTap:{
+        //        navigationView.push("qrc:/QML/page/Bookmark.qml")
+        //    }
+        //}
         FluPaneItem{
             title:"我的图书计划"
             image:"qrc:/resource/image/control/Checkbox.png"

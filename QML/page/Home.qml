@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Window
 import QtQuick.Controls
-import "qrc:///QML/global/"
+import "../global"
 import FluentUI
 
 //Home界面

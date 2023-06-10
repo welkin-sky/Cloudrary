@@ -66,7 +66,9 @@ set_target_properties(appCloudrary PROPERTIES
 )
 
 target_link_libraries(appCloudrary
-    PRIVATE Qt6::Quick Qt6::Core
+    PRIVATE
+    Qt6::Quick
+    Qt6::Core
 )
 
 install(TARGETS appCloudrary
