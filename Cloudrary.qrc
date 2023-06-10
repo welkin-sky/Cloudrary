@@ -4,7 +4,6 @@
         <file>QML/Main.qml</file>
         <file>QML/App.qml</file>
         <file>QML/window/MainWindow.qml</file>
-        <file>QML/page/Bookmark.qml</file>
         <file>QML/page/Books.qml</file>
         <file>QML/page/Collections.qml</file>
         <file>QML/page/Home.qml</file>
