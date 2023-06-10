@@ -25,7 +25,7 @@ FluObject{
         FluPaneItem{
             title:"我的图书"
             image:"qrc:/resource/image/control/Button.png"
-            getEntrance:true
+            flag:1
             desc:"你所有导入的书都会被呈现在这里"
             onTap:{
                 navigationView.push("qrc:/QML/page/Books.qml")
@@ -34,7 +34,7 @@ FluObject{
         FluPaneItem{
             title:"我的收藏"
             image:"qrc:/resource/image/control/Button.png"
-            getEntrance:true
+            flag:1
             desc:"你所有导入的书都会被呈现在这里"
             onTap:{
                 navigationView.push("qrc:/QML/page/Collection.qml")
@@ -52,7 +52,7 @@ FluObject{
         FluPaneItem{
             title:"我的图书计划"
             image:"qrc:/resource/image/control/Checkbox.png"
-            getEntrance:true
+            flag:1
             desc:"A control that a user can select or clear."
             onTap:{
                 navigationView.push("qrc:/QML/page/Plan.qml")
@@ -66,7 +66,7 @@ FluObject{
         var items = navigationView.getItems();
         for(var i=0;i<items.length;i++){
             var item = items[i]
-            if(item instanceof FluPaneItem && item.getEntrance){
+            if(item instanceof FluPaneItem && item.flag){
                 arr.push(item)
             }
         }

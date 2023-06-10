@@ -12,9 +12,6 @@ qt_standard_project_setup()
 
 set(CMAKE_AUTORCC ON)
 
-
-
-
 #遍历所有Cpp文件
 file(GLOB_RECURSE CPP_FILES *.cpp *.h *.hpp)
 foreach(filepath ${CPP_FILES})

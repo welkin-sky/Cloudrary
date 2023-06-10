@@ -4,8 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.platform
 import FluentUI
-import "./global"
-
+import "./Global"
 FluWindow {                         //主页面
     title: "Cloudrary"
     width: 1000
@@ -15,7 +14,7 @@ FluWindow {                         //主页面
     minimumHeight: 460
     launchMode: FluWindow.SingleTask
     visible: true
-    FluNavigationView2{             //导航栏
+    FluNavigationView{             //导航栏
             id:nav_view
             anchors.fill: parent
             items: ItemsOriginal
