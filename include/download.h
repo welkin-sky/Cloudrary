@@ -11,6 +11,6 @@
 #include <regex>
 #include <string>
 
-bool download(const std::string url, const std::string outputFilePath);
+void download(const std::string url, const std::string outputFilePath);
 
 #endif
