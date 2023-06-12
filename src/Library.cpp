@@ -31,14 +31,12 @@ void from_json(const json& j, BookList& b) {
 }
 
 void to_json(json& j, const Library& l) {
-  json name = {"name", l.getName()};
-  j = static_cast<BookList>(l);  // 显式转换防止循环调用
-  j.push_back(name);
+  j = {{"name", l.getName()}, {"data", static_cast<BookList>(l)}};
 }
 
 void from_json(const json& j, Library& l) {
-  for (const auto& item : j) {
-    if (item.contains("name")) l.setName(item.at("name").get<string>());
+    l.setName(j["name"]);
+  for (const auto& item : j["data"]) {
     Book temp;
     temp = item;
     l.add(temp);
