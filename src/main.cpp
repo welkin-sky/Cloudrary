@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 #include "base.h"
 
 const char *FILEPATH = "data.json";
@@ -34,8 +35,7 @@ public:
             cout << i.getTitle() << i.getAuthor() << i.getTextPath() << i.getDescription() << std::endl;
         }
     }
-    void add() {
-        cin.clear();
+    void addbook() {
         Book b;
         string temp;
         cout << "Title:";
@@ -44,6 +44,8 @@ public:
         cout << "Path:";
         getline(cin, temp);
         b.setTextPath(temp);
+        std::filesystem::path pt(temp);
+        b.setName(pt.filename().string());
         cout << "Author:";
         getline(cin, temp);
         b.setAuthor(temp);
@@ -51,6 +53,10 @@ public:
         getline(cin, temp);
         b.setDescription(temp);
         now.add(b);
+        cout << "Add suscessfully.";
+    }
+    void addlib() {
+        
     }
     void remove();
     void sortby();
@@ -79,14 +85,14 @@ int main() {
 }
 
 void cli(Base &base) {
+    static const string usage = "Usage: ls / cd [lib] / search [info] / addbook "
+                                "/ addlib / remove [name] / sortby [lib] [method] / exit\n";
     Process p(base);
     cout << "Welcome to Cloudrary, an ebook manager.\n"
-         << "Usage: ls / cd [lib] / search [info] / add "
-            "/ remove [name] / sortby [method] / exit"
-            "(name should not include spaces and tabs)\n";
+         << usage << "(name should not include spaces and tabs)\n";
+    cout << p.now.getName() << ":";
     string cliInput;
     while (cin >> cliInput) {
-        cout << p.now.getName() << ":";
         if (cliInput == "ls") {
             p.ls();
         } else if (cliInput == "search") {
@@ -97,8 +103,9 @@ void cli(Base &base) {
             string name;
             cin >> name;
             p.cd(name);
-        } else if (cliInput == "add") {
-
+        } else if (cliInput == "addbook") {
+            cin.sync();
+            p.addbook();
         } else if (cliInput == "remove") {
 
         } else if (cliInput == "sortby") {
@@ -106,11 +113,11 @@ void cli(Base &base) {
         } else if (cliInput == "exit"){
             break;
         } else {
-            cout << "Invalid arugment.\n"
-                    "Usage: ls / cd [lib] / search [info] / add "
-                    "/ remove [name] / sortby [lib] [method] / exit\n";
+            cout << "Invalid arugment.\n" << usage;
         }
         cin.clear();
+        cin.sync();
+        cout << p.now.getName() << ":";
     }
 }
 
