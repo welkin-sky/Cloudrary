@@ -49,7 +49,7 @@ FluObject{
         //        navigationView.push("qrc:/QML/page/Bookmark.qml")
         //    }
         //}
-
+<<<<<<< HEAD
         FluPaneItem{
             title:"我的图书计划"
             image:"qrc:/resource/image/control/Checkbox.png"
