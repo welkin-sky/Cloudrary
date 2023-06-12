@@ -12,9 +12,9 @@ FluScrollablePage{
     ListModel{                                              //主页项目github项目跳转栏
         id:github_repo
         ListElement{
-            icon:"qrc:/resource/image/cloudary_icon.svg"
-            title:"Cloudary Github"
-            desc:"Cloudary是一款专属于你的云书库，让你方便地管理你所有的电子书。"
+            icon:"qrc:/resource/image/cloudrary_icon.svg"
+            title:"Cloudrary Github"
+            desc:"Cloudrary是一款专属于你的云书库，让你方便地管理你所有的电子书。"
             url:"https://github.com/welkin-sky/Cloudrary"
         }
 
@@ -38,7 +38,7 @@ FluScrollablePage{
             }
         }
         FluText{
-            text:"Cloudary"
+            text:"Cloudrary"
             font: FluTextStyle.TitleLarge
             anchors{
                 top: parent.top
@@ -256,7 +256,7 @@ FluScrollablePage{
         cellHeight: 120
         cellWidth: 320
         interactive: false
-        model: ItemsOriginal.getEntrance()
+        model: ItemsOriginal.fasterEntance()
         delegate: com_item
     }
 
