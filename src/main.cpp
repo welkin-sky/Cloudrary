@@ -7,32 +7,37 @@ const char *FILEPATH = "data.json";
 
 using std::cout, std::cerr, std::cin;
 
-void cli(Base &base);
+void cli(Base &base, std::ofstream & out);
 
 class Process {
 public:
     Base &base;
-    Library & now;
+    INT now = 0;
     Process() = default;
-    explicit Process(Base &b) : base(b), now(b.at(0)) {}
+    explicit Process(Base &b) : base(b), now(0) {}
     void ls() {
-            cout << "In " << now.getName() << ":\n";
-            for (const auto & i: now) {
-                cout << i.getTitle() << i.getAuthor() << i.getTextPath() << i.getDescription() << std::endl;
+            cout << "In " << base.at(now).getName() << ":\n";
+            for (const auto & i: base.at(now)) {
+                cout << i.getName() << '\t' << i.getTitle()  << '\t' << i.getAuthor() << '\t'
+                << i.getTextPath() << '\t' << i.getDescription() << std::endl;
         }
     }
     void cd(const string & name) {
-        for (const auto & i : base) {
-            if (i.getName() == name) {
+        bool status = false;
+        for (int i = 0; i < base.size(); i++) {
+            if (base.at(i).getName() == name) {
                 now = i;
+                status = true;
             }
         }
+        if (!status) cout << "No matching\n";
     }
     void search(const string & info) {
-        auto bl = now.search(info);
+        auto bl = base.at(now).search(info);
         cout << "Search results:\n";
         for (const auto & i : bl) {
-            cout << i.getTitle() << i.getAuthor() << i.getTextPath() << i.getDescription() << std::endl;
+            cout << i.getName() << '\t' << i.getTitle()  << '\t' << i.getAuthor() << '\t'
+                 << i.getTextPath() << '\t' << i.getDescription() << std::endl;
         }
     }
     void addbook() {
@@ -52,45 +57,108 @@ public:
         cout << "Description:";
         getline(cin, temp);
         b.setDescription(temp);
-        now.add(b);
-        cout << "Add suscessfully.";
+        base.at(now).add(b);
+        cout << "Add suscessfully.\n";
     }
     void addlib() {
-
+        Library l;
+        string name;
+        cout << "Name:";
+        cin >> name;
+        l.setName(name);
+        base.add(l);
+        cout << "Add sucessfully.\n";
     }
-    void remove();
-    void sortby();
+    void removebook() {
+        string name;
+        cout << "Name:";
+        cin >> name;
+        for (const auto i : base.at(now)) {
+            if (i.getName() == name) {
+                base.at(now).remove(i);
+                break;
+            }
+        }
+        cout << "Remove successfully.\n";
+    }
+    void removelib() {
+        string name;
+        cout << "Name:";
+        cin >> name;
+        for (int i = 0; i < base.size(); i++) {
+            if (base.at(i).getName() == name) {
+                base.remove(i);
+                now = i - 1;
+                break;
+            }
+        }
+
+        cout << "Remove succesfully.\n";
+    }
+    void sortby(const string & str) {
+        BookList b;
+        static const char * method [5]  =
+                {"name", "title", "path", "author", "description"};
+        int i = 0;
+        for (; i < 5 ; i++) {
+            if (str == method[i]) {
+                switch (i) {
+                    case 0:
+                        base.at(now).sortBy(Book::CompareName);
+                        break;
+                    case 1:
+                        base.at(now).sortBy(Book::CompareTitle);
+                        break;
+                    case 2:
+                        base.at(now).sortBy(Book::CompareTextPath);
+                        break;
+                    case 3:
+                        base.at(now).sortBy(Book::CompareAuthor);
+                        break;
+                    case 4:
+                        base.at(now).sortBy(Book::CompareDescription);
+                        break;
+                }
+                break;
+            }
+        }
+        if (i == 5) cout << "Wrong method! Available method: name, title, path, author, description.\n";
+        else ls();
+    }
 };
 
 int main() {
 //  test();
     Base base;
     std::ifstream in(FILEPATH);
+    string data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    std::ofstream out(FILEPATH);
     if (!in) {
-        std::ofstream out(FILEPATH);
         Library l;
-        l.setName("Untitled 1");
+        l.setName("Untitled-1");
         base.add(l);
-        out << Base::serialize(base);
+        data = Base::serialize(base);
+        out << data;
+        out.flush();
         in.open(FILEPATH);
     }
-    string data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
     try {
         base = Base::deserialize(data);
     } catch (std::exception &ex) {
         cerr << "JSON Parsing is wrong. data.json might be broken.\nDetail: \n" << ex.what();
     }
-    cli(base);
+    cli(base, out);
+
     return 0;
 }
 
-void cli(Base &base) {
+void cli(Base &base, std::ofstream & out) {
     static const string usage = "Usage: ls / cd [lib] / search [info] / addbook "
-                                "/ addlib / remove [name] / sortby [lib] [method] / exit\n";
+                                "/ addlib / removebook / removelib / sortby [method] / exit\n";
     Process p(base);
     cout << "Welcome to Cloudrary, an ebook manager.\n"
          << usage << "(name should not include spaces and tabs)\n";
-    cout << p.now.getName() << ":";
+    cout << p.base.at(p.now).getName() << ":";
     string cliInput;
     while (cin >> cliInput) {
         if (cliInput == "ls") {
@@ -106,10 +174,19 @@ void cli(Base &base) {
         } else if (cliInput == "addbook") {
             cin.sync();
             p.addbook();
-        } else if (cliInput == "remove") {
-
+        } else if (cliInput == "addlib") {
+            cin.sync();
+            p.addlib();
+        } else if (cliInput == "removebook") {
+            cin.sync();
+            p.removebook();
+        } else if (cliInput == "removelib") {
+            cin.sync();
+            p.removelib();
         } else if (cliInput == "sortby") {
-
+            string method;
+            cin >> method;
+            p.sortby(method);
         } else if (cliInput == "exit"){
             break;
         } else {
@@ -117,7 +194,11 @@ void cli(Base &base) {
         }
         cin.clear();
         cin.sync();
-        cout << p.now.getName() << ":";
+        out.close();
+        out.open(FILEPATH);
+        out << Base::serialize(base);
+        out.flush();
+        cout << p.base.at(p.now).getName() << ":";
     }
 }
 

@@ -169,11 +169,11 @@ public:
 
     [[nodiscard]] INT size() const { return static_cast<INT>(_books.size()); }
 
-    BookList &add(Book book) {
+    BookList &add(const Book & book) {
         _books.push_back(book);
         return *this;
     }
-    BookList &remove(Book &book) {
+    BookList &remove(const Book &book) {
         _books.erase(_books.begin() + find(book));
         return *this;
     }
@@ -258,9 +258,9 @@ public:
     }
     [[nodiscard]] const_reverse_iterator crend() const { return _libs.crend(); }
 
-    void add(Library &lib) { _libs.push_back(lib); }  // 我错了 是引用
+    void add(const Library & lib) { _libs.push_back(lib); }  // 我错了 是引用
     void remove(int index) { _libs.erase(_libs.begin() + index); }
-
+    INT size() const {return _libs.size();}
     Library & at(INT index) { return _libs.at(index); }
     void swap(INT a, INT b) {
         std::swap(_libs[a], _libs[b]);

@@ -1,6 +1,8 @@
 #ifndef DOWNLOAD_H
 #define DOWNLOAD_H
 
+#define FMT_HEADER_ONLY
+
 #include <fmt/chrono.h>
 #include <fmt/core.h>
 #include <fmt/color.h>
