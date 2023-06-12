@@ -9,7 +9,7 @@ import "../Global"
 CustomWindow {
 
     id:window
-    title: "Cloudary"
+    title: "Cloudrary"
     width: 1000
     height: 640
     closeDestory:false
@@ -35,9 +35,9 @@ CustomWindow {
     SystemTrayIcon {
         id:system_tray
         visible: true
-        icon.source: "qrc:/resource/image/cloudary_icon.png
+        icon.source: "qrc:/resource/image/cloudrary_icon.png
 "
-        tooltip: "Cloudary"
+        tooltip: "Cloudrary"
         menu: Menu {
             MenuItem {
                 text: "退出"
@@ -64,7 +64,7 @@ CustomWindow {
         negativeText:"最小化"
         buttonFlags: FluContentDialog.NeutralButton | FluContentDialog.NegativeButton | FluContentDialog.PositiveButton
         onNegativeClicked:{
-            system_tray.showMessage("友情提示","Cloudary已隐藏至托盘,点击托盘可再次激活窗口");
+            system_tray.showMessage("友情提示","Cloudrary已隐藏至托盘,点击托盘可再次激活窗口");
             window.hide()
         }
         positiveText:"退出"
@@ -101,8 +101,8 @@ CustomWindow {
         footerItems:ItemsFooter
         topPadding:FluTools.isMacos() ? 20 : 5
         displayMode:MainEvent.displayMode
-        logo: "qrc:/resource/image/cloudary_icon.svg"
-        title:"Cloudary"
+        logo: "qrc:/resource/image/cloudrary_icon.svg"
+        title:"Cloudrary"
         autoSuggestBox:FluAutoSuggestBox{
             width: 280
             anchors.centerIn: parent
