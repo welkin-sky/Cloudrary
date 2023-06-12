@@ -6,6 +6,7 @@
 #include <initializer_list>
 #include <string>
 #include <vector>
+#include <QObject>
 
 #include "nlohmann/json.hpp"
 
@@ -185,7 +186,8 @@ class Library : BookList {  // tbc
   string _name;
 };
 
-class Base {
+class Base : public QObject{
+  Q_OBJECT
  public:
   Base() = default;
   Base(const string &j);
@@ -212,10 +214,10 @@ class Base {
   }
   [[nodiscard]] const_reverse_iterator crend() const { return _libs.crend(); }
 
-  void add(Library &lib) { _libs.push_back(lib); }  // 我错了 是引用
-  void remove(int index) { _libs.erase(_libs.begin() + index); }
+  Q_INVOKABLE void add(Library &lib) { _libs.push_back(lib); }  // 我错了 是引用
+  Q_INVOKABLE void remove(int index) { _libs.erase(_libs.begin() + index); }
 
-  void swap(INT a, INT b) {
+  Q_INVOKABLE void swap(INT a, INT b) {
     std::swap(_libs[a], _libs[b]);
   }  // 交换两个Library的位置
 

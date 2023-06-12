@@ -5,6 +5,8 @@
 #include <QQuickWindow>
 #include <QProcess>
 #include "AppInfo.h"
+#include "./include/base.h"
+#include "./lang/Zh.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +23,11 @@ int main(int argc, char *argv[])
     }
     app.setQuitOnLastWindowClosed(false);
     QQmlApplicationEngine engine;
+    // 初始化上下文对象
+    Zh zh;
+    Base base;
+    engine.rootContext()->setContextProperty("lang", &zh);
+    engine.rootContext()->setContextProperty("base", &base);
     const QUrl url(QStringLiteral("qrc:/QML/App.qml"));
     //    const QUrl url(QStringLiteral("qrc:/example/qml/TestWindow.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
