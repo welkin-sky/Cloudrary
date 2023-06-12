@@ -11,6 +11,7 @@
         <file>QML/Global/ItemsFooter.qml</file>
         <file>QML/Global/ItemsOriginal.qml</file>
         <file>QML/Global/MainEvent.qml</file>
+        <file>QML/component/CustomWindow.qml</file>
         <file>resource/image/bg_home.png</file>
         <file>resource/image/cloudrary_icon.svg</file>
         <file>resource/image/control/Acrylic.png</file>

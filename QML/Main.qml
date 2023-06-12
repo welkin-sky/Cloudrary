@@ -5,7 +5,7 @@ import QtQuick.Layouts
 import Qt.labs.platform
 import FluentUI
 import "./Global"
-import ".component"
+import "./component"
 
 FluWindow {                         //主页面
     title: "Cloudrary"
