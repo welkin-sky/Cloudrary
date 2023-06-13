@@ -1,6 +1,6 @@
 #include "download.h"
 
-bool download(const std::string url, const std::string outputFilePath) {
+void download(const std::string url, const std::string outputFilePath) {
   const std::string cmd =
       "curl -# -o " + outputFilePath +
       " -w \"%{time_total};%{speed_download};%{http_code}\" " + url;
@@ -11,21 +11,21 @@ bool download(const std::string url, const std::string outputFilePath) {
                                                 &pclose);
   if (!pipe) {
     fmt::print(stderr, "Error: failed to execute command {}\n", cmd);
-    return 1;
+    return;
   }
 
   // 将输出流设置为非缓冲流
   if (setvbuf(pipe.get(), nullptr, _IONBF, 0) != 0) {
     fmt::print(stderr,
                "Error: failed to set output stream to non-buffered mode\n");
-    return 1;
+    return;
   }
 
   // 获取文件大小
   std::ifstream outputFile(outputFilePath, std::ios::binary | std::ios::ate);
   if (!outputFile) {
     fmt::print(stderr, "Error: failed to open file {}\n", outputFilePath);
-    return 1;
+    return;
   }
   const std::int64_t fileSize = outputFile.tellg();
   outputFile.close();
@@ -101,9 +101,10 @@ bool download(const std::string url, const std::string outputFilePath) {
   fmt::print("\nDownload completed! Saved as {}\n", outputFilePath);
 
   // 输出 curl 的内部变量
-  fmt::print(fg(fmt::color::red),"Total time: {:.3f} seconds\n", timeTotal);
-  fmt::print(fg(fmt::color::red),"Download speed: {:.2f} bytes/second\n", speedDownload);
-  fmt::print(fg(fmt::color::red),"HTTP status code: {}\n", httpCode);
+  fmt::print(fg(fmt::color::red), "Total time: {:.3f} seconds\n", timeTotal);
+  fmt::print(fg(fmt::color::red), "Download speed: {:.2f} bytes/second\n",
+             speedDownload);
+  fmt::print(fg(fmt::color::red), "HTTP status code: {}\n", httpCode);
 
-  return true;
+  return;
 }

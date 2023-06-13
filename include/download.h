@@ -4,8 +4,9 @@
 #define FMT_HEADER_ONLY
 
 #include <fmt/chrono.h>
-#include <fmt/core.h>
 #include <fmt/color.h>
+#include <fmt/core.h>
+
 #include <chrono>
 #include <cstdio>
 #include <fstream>
@@ -13,6 +14,6 @@
 #include <regex>
 #include <string>
 
-bool download(const std::string url, const std::string outputFilePath);
+void download(const std::string url, const std::string outputFilePath);
 
 #endif

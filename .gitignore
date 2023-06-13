@@ -5,3 +5,4 @@ include/fmt/
 .cache
 build
 .vscode
+CMakeLists.txt

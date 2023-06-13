@@ -51,15 +51,24 @@ bool operator<(const Book &a, const Book &b) {
 bool operator>(const Book &a, const Book &b) { return b < a; }
 
 // Defination of predicates
-Book::predicate Book::CompareName =
-        [](const Book & a, const Book & b) -> bool {return a.getName() < b.getName(); };
-Book::predicate Book::CompareTitle =
-        [](const Book & a, const Book & b) -> bool {return a.getTitle() < b.getTitle(); };
-Book::predicate Book::CompareTextPath =
-        [](const Book & a, const Book & b) -> bool {return a.getTextPath() < b.getTextPath(); };
-Book::predicate Book::CompareCoverPath =
-        [](const Book & a, const Book & b) -> bool {return a.getCoverPath() < b.getCoverPath(); };
-Book::predicate Book::CompareAuthor =
-        [](const Book & a, const Book & b) -> bool {return a.getName() < b.getAuthor(); };
-Book::predicate Book::CompareDescription =
-        [](const Book & a, const Book & b) -> bool {return a.getDescription() < b.getDescription(); };
+Book::predicate Book::CompareName = [](const Book &a, const Book &b) -> bool {
+  return a.getName() < b.getName();
+};
+Book::predicate Book::CompareTitle = [](const Book &a, const Book &b) -> bool {
+  return a.getTitle() < b.getTitle();
+};
+Book::predicate Book::CompareTextPath = [](const Book &a,
+                                           const Book &b) -> bool {
+  return a.getTextPath() < b.getTextPath();
+};
+Book::predicate Book::CompareCoverPath = [](const Book &a,
+                                            const Book &b) -> bool {
+  return a.getCoverPath() < b.getCoverPath();
+};
+Book::predicate Book::CompareAuthor = [](const Book &a, const Book &b) -> bool {
+  return a.getName() < b.getAuthor();
+};
+Book::predicate Book::CompareDescription = [](const Book &a,
+                                              const Book &b) -> bool {
+  return a.getDescription() < b.getDescription();
+};

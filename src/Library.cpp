@@ -35,7 +35,7 @@ void to_json(json& j, const Library& l) {
 }
 
 void from_json(const json& j, Library& l) {
-    l.setName(j["name"]);
+  l.setName(j["name"]);
   for (const auto& item : j["data"]) {
     Book temp;
     temp = item;
