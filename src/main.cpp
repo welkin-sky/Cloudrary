@@ -52,6 +52,7 @@ class Process {
     Book b;
     string temp;
     cout << "Title: ";
+    cin.ignore();
     getline(cin, temp);
     b.setTitle(temp);
     cout << "Path: ";
